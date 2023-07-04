@@ -1,2 +1,16 @@
 # custom_loss
-Try customized loss functions and evaluation metrics on synthetic and stock price data.
+Try the SHAP framework and customized loss functions in combination with certain evaluation metrics on synthetic and stock price data.
+
+### Motivation
+Predicting stock price movements is a hot topic for investors to avoid loss and improve their gain. Assume we aim to train a model to predict the stock price movement (up/down) in terms of relative change with a certain lead time. Following the model prediction, the investor would then either go long or short. Most often, neural networks are trained to solve this task with some form of **mean squared error** (mse) loss function. But this punishes deviation in either direction. Even, if the model predicts an up (down) movement in terms of a positve (negative) relative change, forcing the investor to go long (short), the model might not predict the exact relative change. But as long, as the direction is correctly predicted, there is no loss for the investor. Only if model prediction and true target (relative change) point into opposite directions, there is a real loss for the investor.
+
+### Objective
+In this project, we will investigate customized loss functions. In particular, we start with an **adjusted mse** loss, that is equal to the *normal* mse, if prediction and true target point into opposite directions, and zero, else. As an extension, we will then allow for some small loss (e.g., 1/2 mse), in case the prediction and true target are equal in sign.
+
+### Data
+Before we apply our customized loss functions on real world stock price data, we will set up some synthetic time series data. The aim is to have 4 input series and 1 target series. In particular, we use 2 long wave sin functions with similar base frequency but different amplitude to set the large scale trend. These series are highly correlated, on purpose. Additionally, we add 1 short wave sin function for adding some small scale fluctuations. This feature is supposed to be linearly independent of the 2 long wave functions. Ultimately, we add 1 noise series which is randomly drawn. The target series is the (weighted) sum of all 4 series.
+
+### Outline
+- We start by training a simple LSTM/fc model on our synthetic data with regular mse loss. Next, we apply the SHAP framework ([video introduction](https://vimeo.com/745352008/3168320cef), [paper](https://arxiv.org/abs/1705.07874)). A major drawback of global SHAP values is, that feature importance is split on collinear features. We want to confirm that on our synthetic input series, of which the first 2 are highly correlated.
+- Next, we repeat the training process, using our customized mse loss. In terms of pure mse of prediction and targets, the model performance is expected to be worse. But an investor is not interested in the pure mse, but rather looks at **gain** and **outperformance** as evaluation metrics. Do we find improvements on these metrics with our customized mse loss?
+- Ultimately, we train ANN models on real world stock price data, using the vanilla mse loss in comparison to our customized mse loss. In parallel, we again apply the SHAP framework, to identify the most important drivers among all input features. Again, keep in mind, that SHAP splits feature importance on collinear input features!
