@@ -1,4 +1,4 @@
-# custom_loss
+# custom_loss: Train ANNs with asymmetric loss functions
 Try the SHAP framework and customized loss functions in combination with certain evaluation metrics on synthetic and stock price data.
 
 ### Motivation
